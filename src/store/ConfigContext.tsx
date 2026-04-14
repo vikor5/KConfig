@@ -13,6 +13,7 @@ interface ConfigContextType {
   updateLayerMapping: (layerIndex: number, srcKey: string, destKey: string) => void;
   reorderLayers: (newLayers: LayerConfig[]) => void;
   loadConfig: (newConfig: KMonadConfig) => void;
+  resetConfig: () => void;
 }
 
 const defaultConfig: KMonadConfig = {
@@ -90,10 +91,14 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   };
 
+  const resetConfig = () => {
+    setConfig(defaultConfig);
+  };
+
   return (
     <ConfigContext.Provider value={{
       config, setConfig, updateConfigText, updateSrc, updateAlias, 
-      addLayer, removeLayer, updateLayerName, updateLayerMapping, reorderLayers, loadConfig
+      addLayer, removeLayer, updateLayerName, updateLayerMapping, reorderLayers, loadConfig, resetConfig
     }}>
       {children}
     </ConfigContext.Provider>

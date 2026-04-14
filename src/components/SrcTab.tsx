@@ -86,7 +86,9 @@ export const SrcTab: React.FC = () => {
   };
 
   const handleRemove = (idToRemove: string) => {
-    updateSrc(config.src.filter(k => k !== idToRemove));
+    if (window.confirm(`Are you sure you want to remove key "${idToRemove}"?`)) {
+      updateSrc(config.src.filter(k => k !== idToRemove));
+    }
   };
 
   return (

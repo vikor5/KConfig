@@ -51,7 +51,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 0.5rem;
 }
 
@@ -69,6 +69,11 @@
 .keycap:focus-within {
   border-color: var(--accent-color);
   box-shadow: 0 0 0 1px var(--accent-color);
+}
+
+.mapped {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 .srcLabel {

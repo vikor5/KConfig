@@ -41,10 +41,7 @@ export const exportToKbd = (config: KMonadConfig) => {
     // We must output mappings in the EXACT order defined by `config.src`
     const mappedKeys = config.src.map(srcKey => {
       const mapping = layer.mappings.find(m => m.src === srcKey);
-      // Default to "transparent" (_) or the srcKey itself if not mapped? 
-      // Typically KMonad uses the srcKey or '_' or fallthrough. Let's use 
-      // the key itself if no mapping is found, or maybe '_'? Let's just use the srcKey if not explicitly mapped.
-      return mapping && mapping.dest ? mapping.dest : srcKey;
+      return mapping && mapping.dest ? mapping.dest : '_';
     });
     
     kbdContent += `${mappedKeys.join(' ')}\n)\n\n`;

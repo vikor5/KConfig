@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Download, Upload, FileCode2 } from 'lucide-react';
+import { Download, Upload, FileCode2, Trash2 } from 'lucide-react';
 import { ConfigProvider, useConfig } from './store/ConfigContext';
 import { Sidebar, type TabType } from './components/Sidebar';
 import { SrcTab } from './components/SrcTab';
@@ -12,7 +12,7 @@ import './index.css';
 
 const MainApp: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('config');
-  const { config, loadConfig } = useConfig();
+  const { config, loadConfig, resetConfig } = useConfig();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const renderContent = () => {
@@ -42,6 +42,13 @@ const MainApp: React.FC = () => {
     }
   };
 
+  const handleReset = () => {
+    if (window.confirm('Are you sure you want to reset all configurations to default? This cannot be undone.')) {
+      resetConfig();
+      setCurrentTab('config');
+    }
+  };
+
   return (
     <div className={styles.layout}>
       <header className={styles.header}>
@@ -50,6 +57,14 @@ const MainApp: React.FC = () => {
           KConfig
         </div>
         <div className={styles.actions}>
+          <button 
+            className={styles.btn} 
+            onClick={handleReset}
+            style={{ color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.3)' }}
+          >
+            <Trash2 size={16} /> Reset
+          </button>
+
           <input 
             type="file" 
             accept=".kconfig,.json" 

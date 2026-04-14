@@ -39,7 +39,7 @@ export const LayerTab: React.FC<LayerTabProps> = ({ layerIndex }) => {
           const destValue = mapping ? mapping.dest : '';
 
           return (
-            <div key={srcKey} className={styles.keycap}>
+            <div key={srcKey} className={`${styles.keycap} ${destValue.trim() ? styles.mapped : ''}`}>
               <span className={styles.srcLabel}>{srcKey}</span>
               <input 
                 className={styles.destInput}
