@@ -18,7 +18,12 @@ export const exportToKbd = (config: KMonadConfig) => {
 
   // 1. Defcfg block
   if (config.config.trim()) {
-    kbdContent += `(defcfg\n  ${config.config.trim().replace(/\\n/g, '\n  ')}\n)\n\n`;
+    const formattedConfig = config.config
+      .trim()
+      .split('\n')
+      .map(line => `\t${line}`)
+      .join('\n');
+    kbdContent += `(defcfg\n${formattedConfig}\n)\n\n`;
   }
 
   // 2. Defsrc block
