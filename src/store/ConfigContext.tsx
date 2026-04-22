@@ -14,9 +14,11 @@ interface ConfigContextType {
   reorderLayers: (newLayers: LayerConfig[]) => void;
   loadConfig: (newConfig: KMonadConfig) => void;
   resetConfig: () => void;
+  updateConfigName: (name: string) => void;
 }
 
 const defaultConfig: KMonadConfig = {
+  name: 'My Layout',
   config: 'input  (device-file "/dev/input/by-id/usb-0000_0000-event-kbd")\noutput (uinput-sink "My KMonad output")\nfallthrough true',
   src: ['esc', 'f1', 'f2', 'f3', 'grave', '1', '2', '3', 'tab', 'q', 'w', 'e', 'caps', 'a', 's', 'd', 'lsft', 'z', 'x', 'c'],
   alias: [],
@@ -34,6 +36,8 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [config, setConfig] = useState<KMonadConfig>(defaultConfig);
 
   const updateConfigText = (text: string) => setConfig((prev) => ({ ...prev, config: text }));
+  
+  const updateConfigName = (name: string) => setConfig((prev) => ({ ...prev, name }));
   
   const updateSrc = (newSrc: SrcKey[]) => setConfig((prev) => ({ ...prev, src: newSrc }));
   
@@ -84,6 +88,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const loadConfig = (newConfig: KMonadConfig) => {
     setConfig({
+      name: newConfig.name || 'Imported Layout',
       config: newConfig.config || '',
       src: newConfig.src || [],
       alias: newConfig.alias || [],
@@ -98,7 +103,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   return (
     <ConfigContext.Provider value={{
       config, setConfig, updateConfigText, updateSrc, updateAlias, 
-      addLayer, removeLayer, updateLayerName, updateLayerMapping, reorderLayers, loadConfig, resetConfig
+      addLayer, removeLayer, updateLayerName, updateLayerMapping, reorderLayers, loadConfig, resetConfig, updateConfigName
     }}>
       {children}
     </ConfigContext.Provider>

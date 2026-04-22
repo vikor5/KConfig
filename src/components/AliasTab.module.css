@@ -96,6 +96,26 @@
   font-family: monospace;
 }
 
+.editInput {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.5rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.editInput:focus {
+  border-color: var(--accent-color);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.editInput:hover:not(:focus) {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+}
+
 .deleteBtn {
   color: var(--text-muted);
   padding: 0.5rem;

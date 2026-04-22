@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Download, Upload, FileCode2, Trash2 } from 'lucide-react';
 import { ConfigProvider, useConfig } from './store/ConfigContext';
 import { Sidebar, type TabType } from './components/Sidebar';
@@ -12,7 +12,13 @@ import './index.css';
 
 const MainApp: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('config');
-  const { config, loadConfig, resetConfig } = useConfig();
+  const { config, loadConfig, resetConfig, updateConfigName } = useConfig();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(config.name || 'My Layout');
+
+  useEffect(() => {
+    setTempName(config.name || 'My Layout');
+  }, [config.name]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const renderContent = () => {
@@ -52,9 +58,43 @@ const MainApp: React.FC = () => {
   return (
     <div className={styles.layout}>
       <header className={styles.header}>
-        <div className={styles.title}>
-          <FileCode2 className={styles.icon} size={28} />
-          KConfig
+        <div className={styles.titleContainer}>
+          <div className={styles.title}>
+            <FileCode2 className={styles.icon} size={28} />
+            KConfig
+          </div>
+          <div className={styles.nameSeparator}>/</div>
+          {isEditingName ? (
+            <input
+              type="text"
+              value={tempName}
+              onChange={(e) => setTempName(e.target.value)}
+              onBlur={() => {
+                updateConfigName(tempName);
+                setIsEditingName(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  updateConfigName(tempName);
+                  setIsEditingName(false);
+                }
+                if (e.key === 'Escape') {
+                  setTempName(config.name || 'My Layout');
+                  setIsEditingName(false);
+                }
+              }}
+              autoFocus
+              className={styles.nameInput}
+            />
+          ) : (
+            <div 
+              className={styles.configName} 
+              onClick={() => setIsEditingName(true)}
+              title="Click to edit name"
+            >
+              {config.name || 'My Layout'}
+            </div>
+          )}
         </div>
         <div className={styles.actions}>
           <button 

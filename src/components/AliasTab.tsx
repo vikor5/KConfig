@@ -20,7 +20,24 @@ import { CSS } from '@dnd-kit/utilities';
 import { useConfig } from '../store/ConfigContext';
 import styles from './AliasTab.module.css';
 
-const SortableAliasRow = ({ alias, onRemove }: { alias: { name: string, value: string }, onRemove: (name: string) => void }) => {
+const SortableAliasRow = ({ 
+  alias, 
+  onRemove,
+  onUpdate 
+}: { 
+  alias: { name: string, value: string }, 
+  onRemove: (name: string) => void,
+  onUpdate: (oldName: string, newName: string, newValue: string) => boolean
+}) => {
+  const [localName, setLocalName] = useState(alias.name);
+  const [localValue, setLocalValue] = useState(alias.value);
+
+  // Sync if props change externally
+  React.useEffect(() => {
+    setLocalName(alias.name);
+    setLocalValue(alias.value);
+  }, [alias.name, alias.value]);
+
   const {
     attributes,
     listeners,
@@ -35,6 +52,35 @@ const SortableAliasRow = ({ alias, onRemove }: { alias: { name: string, value: s
     transition,
   };
 
+  const commitChanges = () => {
+    const trimmedName = localName.trim();
+    const trimmedValue = localValue.trim();
+    
+    if (!trimmedName || !trimmedValue) {
+      setLocalName(alias.name);
+      setLocalValue(alias.value);
+      return;
+    }
+
+    if (trimmedName !== alias.name || trimmedValue !== alias.value) {
+      const success = onUpdate(alias.name, trimmedName, trimmedValue);
+      if (!success) {
+        setLocalName(alias.name);
+        setLocalValue(alias.value);
+      }
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.currentTarget.blur();
+    }
+    if (e.key === ' ' || e.code === 'Space') {
+      // Prevent dnd-kit from capturing spacebar
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div 
       ref={setNodeRef} 
@@ -44,14 +90,29 @@ const SortableAliasRow = ({ alias, onRemove }: { alias: { name: string, value: s
       <div className={styles.dragHandle} {...attributes} {...listeners}>
         <GripVertical size={16} />
       </div>
-      <div className={styles.nameCol}>{alias.name}</div>
-      <div className={styles.valCol}>{alias.value}</div>
+      <input 
+        className={`${styles.editInput} ${styles.nameCol}`}
+        value={localName}
+        onChange={e => setLocalName(e.target.value)}
+        onBlur={commitChanges}
+        onKeyDown={handleKeyDown}
+        placeholder="Alias name"
+      />
+      <input 
+        className={`${styles.editInput} ${styles.valCol}`}
+        value={localValue}
+        onChange={e => setLocalValue(e.target.value)}
+        onBlur={commitChanges}
+        onKeyDown={handleKeyDown}
+        placeholder="Alias value"
+      />
       <button 
         className={styles.deleteBtn}
         onClick={(e) => {
           e.stopPropagation();
           onRemove(alias.name);
         }}
+        title="Delete alias"
       >
         <Trash2 size={16} />
       </button>
@@ -89,6 +150,18 @@ export const AliasTab: React.FC = () => {
         alert('Alias name already exists.');
       }
     }
+  };
+
+  const handleUpdate = (oldName: string, newName: string, newValue: string): boolean => {
+    if (oldName !== newName && config.alias.some(a => a.name === newName)) {
+      alert('Alias name already exists.');
+      return false;
+    }
+    
+    updateAlias(config.alias.map(a => 
+      a.name === oldName ? { name: newName, value: newValue } : a
+    ));
+    return true;
   };
 
   const handleRemove = (nameToRemove: string) => {
@@ -135,7 +208,12 @@ export const AliasTab: React.FC = () => {
             strategy={verticalListSortingStrategy}
           >
             {config.alias.map(a => (
-              <SortableAliasRow key={a.name} alias={a} onRemove={handleRemove} />
+              <SortableAliasRow 
+                key={a.name} 
+                alias={a} 
+                onRemove={handleRemove} 
+                onUpdate={handleUpdate}
+              />
             ))}
           </SortableContext>
         </DndContext>

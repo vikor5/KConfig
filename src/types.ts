@@ -17,6 +17,7 @@ export type LayerConfig = {
 };
 
 export type KMonadConfig = {
+  name?: string;
   config: string;
   src: SrcKey[];
   alias: AliasMap[];

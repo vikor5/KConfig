@@ -1,19 +1,47 @@
 import type { KMonadConfig } from '../types';
 
-export const exportToKConfig = (config: KMonadConfig) => {
-  const json = JSON.stringify(config, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
+const saveFileAs = async (filename: string, content: string | Blob, mimeType: string, extension: string) => {
+  const blob = typeof content === 'string' ? new Blob([content], { type: mimeType }) : content;
+
+  try {
+    if ('showSaveFilePicker' in window) {
+      // type assertion because TS might not have it in standard lib yet depending on tsconfig
+      const handle = await (window as any).showSaveFilePicker({
+        suggestedName: filename,
+        types: [{
+          description: extension === '.kbd' ? 'KMonad KBD File' : 'KConfig File',
+          accept: { [mimeType]: [extension] },
+        }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return;
+    }
+  } catch (err: any) {
+    if (err.name !== 'AbortError') {
+      console.error('Failed to save file with picker:', err);
+    }
+    // AbortError means user cancelled the save dialog, do not fallback
+    if (err.name === 'AbortError') return;
+  }
+
+  // Fallback for browsers without File System Access API
   const url = URL.createObjectURL(blob);
-  
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'config.kconfig';
+  a.download = filename;
   a.click();
-  
   URL.revokeObjectURL(url);
 };
 
-export const exportToKbd = (config: KMonadConfig) => {
+export const exportToKConfig = async (config: KMonadConfig) => {
+  const json = JSON.stringify(config, null, 2);
+  const filename = config.name ? `${config.name.replace(/[^a-z0-9_-]/gi, '_')}.kconfig` : 'config.kconfig';
+  await saveFileAs(filename, json, 'application/json', '.kconfig');
+};
+
+export const exportToKbd = async (config: KMonadConfig) => {
   let kbdContent = '';
 
   // 1. Defcfg block
@@ -52,15 +80,8 @@ export const exportToKbd = (config: KMonadConfig) => {
     kbdContent += `${mappedKeys.join(' ')}\n)\n\n`;
   });
 
-  const blob = new Blob([kbdContent], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'config.kbd';
-  a.click();
-  
-  URL.revokeObjectURL(url);
+  const filename = config.name ? `${config.name.replace(/[^a-z0-9_-]/gi, '_')}.kbd` : 'config.kbd';
+  await saveFileAs(filename, kbdContent, 'text/plain', '.kbd');
 };
 
 export const importFromKConfig = (
