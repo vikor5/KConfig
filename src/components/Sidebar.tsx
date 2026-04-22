@@ -29,14 +29,12 @@ interface SidebarProps {
 
 const SortableLayerItem = ({ 
   layer, 
-  idx, 
   isActive, 
   onSelect,
   onRemove,
   canRemove
 }: { 
   layer: any; 
-  idx: number; 
   isActive: boolean;
   onSelect: () => void;
   onRemove: () => void;
@@ -191,7 +189,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onTabChange }) => 
               <SortableLayerItem 
                 key={layer.name} 
                 layer={layer}
-                idx={idx}
                 isActive={isLayerActive(idx)}
                 onSelect={() => onTabChange({ type: 'layer', index: idx })}
                 canRemove={config.layers.length > 1}

@@ -16,7 +16,7 @@ export type LayerConfig = {
   mappings: LayerMapping[];
 };
 
-export type KMonadConfig = {
+export type KanataConfig = {
   name?: string;
   config: string;
   src: SrcKey[];

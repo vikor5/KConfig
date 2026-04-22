@@ -1,4 +1,4 @@
-import type { KMonadConfig } from '../types';
+import type { KanataConfig } from '../types';
 
 const saveFileAs = async (filename: string, content: string | Blob, mimeType: string, extension: string) => {
   const blob = typeof content === 'string' ? new Blob([content], { type: mimeType }) : content;
@@ -9,7 +9,7 @@ const saveFileAs = async (filename: string, content: string | Blob, mimeType: st
       const handle = await (window as any).showSaveFilePicker({
         suggestedName: filename,
         types: [{
-          description: extension === '.kbd' ? 'KMonad KBD File' : 'KConfig File',
+          description: extension === '.kbd' ? 'Kanata KBD File' : 'KConfig File',
           accept: { [mimeType]: [extension] },
         }],
       });
@@ -35,13 +35,13 @@ const saveFileAs = async (filename: string, content: string | Blob, mimeType: st
   URL.revokeObjectURL(url);
 };
 
-export const exportToKConfig = async (config: KMonadConfig) => {
+export const exportToKConfig = async (config: KanataConfig) => {
   const json = JSON.stringify(config, null, 2);
   const filename = config.name ? `${config.name.replace(/[^a-z0-9_-]/gi, '_')}.kconfig` : 'config.kconfig';
   await saveFileAs(filename, json, 'application/json', '.kconfig');
 };
 
-export const exportToKbd = async (config: KMonadConfig) => {
+export const exportToKbd = async (config: KanataConfig) => {
   let kbdContent = '';
 
   // 1. Defcfg block
@@ -86,14 +86,14 @@ export const exportToKbd = async (config: KMonadConfig) => {
 
 export const importFromKConfig = (
   file: File, 
-  onLoad: (config: KMonadConfig) => void,
+  onLoad: (config: KanataConfig) => void,
   onError: (msg: string) => void
 ) => {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
       const result = e.target?.result as string;
-      const parsed = JSON.parse(result) as KMonadConfig;
+      const parsed = JSON.parse(result) as KanataConfig;
       onLoad(parsed);
     } catch (err) {
       onError('Failed to parse .kconfig file. Ensure it is valid JSON.');

@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
-import type { KMonadConfig, AliasMap, SrcKey, LayerConfig } from '../types';
+import type { KanataConfig, AliasMap, SrcKey, LayerConfig } from '../types';
 
 interface ConfigContextType {
-  config: KMonadConfig;
-  setConfig: React.Dispatch<React.SetStateAction<KMonadConfig>>;
+  config: KanataConfig;
+  setConfig: React.Dispatch<React.SetStateAction<KanataConfig>>;
   updateConfigText: (text: string) => void;
   updateSrc: (newSrc: SrcKey[]) => void;
   updateAlias: (newAlias: AliasMap[]) => void;
@@ -12,14 +12,14 @@ interface ConfigContextType {
   updateLayerName: (index: number, name: string) => void;
   updateLayerMapping: (layerIndex: number, srcKey: string, destKey: string) => void;
   reorderLayers: (newLayers: LayerConfig[]) => void;
-  loadConfig: (newConfig: KMonadConfig) => void;
+  loadConfig: (newConfig: KanataConfig) => void;
   resetConfig: () => void;
   updateConfigName: (name: string) => void;
 }
 
-const defaultConfig: KMonadConfig = {
+const defaultConfig: KanataConfig = {
   name: 'My Layout',
-  config: 'input  (device-file "/dev/input/by-id/usb-0000_0000-event-kbd")\noutput (uinput-sink "My KMonad output")\nfallthrough true',
+  config: 'process-unmapped-keys yes',
   src: ['esc', 'f1', 'f2', 'f3', 'grave', '1', '2', '3', 'tab', 'q', 'w', 'e', 'caps', 'a', 's', 'd', 'lsft', 'z', 'x', 'c'],
   alias: [],
   layers: [
@@ -33,7 +33,7 @@ const defaultConfig: KMonadConfig = {
 const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [config, setConfig] = useState<KMonadConfig>(defaultConfig);
+  const [config, setConfig] = useState<KanataConfig>(defaultConfig);
 
   const updateConfigText = (text: string) => setConfig((prev) => ({ ...prev, config: text }));
   
@@ -86,7 +86,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setConfig((prev) => ({ ...prev, layers: newLayers }));
   };
 
-  const loadConfig = (newConfig: KMonadConfig) => {
+  const loadConfig = (newConfig: KanataConfig) => {
     setConfig({
       name: newConfig.name || 'Imported Layout',
       config: newConfig.config || '',

@@ -10,7 +10,7 @@ export const ConfigTab: React.FC = () => {
       <div className={styles.header}>
         <h2 className={styles.title}>Global Configuration (defcfg)</h2>
         <p className={styles.description}>
-          Define top-level configuration options like input and output devices. Just write plain KMonad configuration block text here.
+          Define top-level configuration options like process-unmapped-keys. Just write plain Kanata configuration block text here.
         </p>
       </div>
 
@@ -18,7 +18,7 @@ export const ConfigTab: React.FC = () => {
         className={styles.editor}
         value={config.config}
         onChange={(e) => updateConfigText(e.target.value)}
-        placeholder="input (device-file &quot;/dev/input...&quot;) ..."
+        placeholder="process-unmapped-keys yes ..."
       />
     </div>
   );
