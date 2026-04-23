@@ -59,7 +59,16 @@ export const exportToKbd = async (config: KanataConfig) => {
     kbdContent += `(defsrc\n  ${config.src.join(' ')}\n)\n\n`;
   }
 
-  // 3. Defalias block
+  // 3. Defvar block
+  if (config.vars && config.vars.length > 0) {
+    kbdContent += `(defvar\n`;
+    config.vars.forEach(v => {
+      kbdContent += `  ${v.name} ${v.value}\n`;
+    });
+    kbdContent += `)\n\n`;
+  }
+
+  // 4. Defalias block
   if (config.alias.length > 0) {
     kbdContent += `(defalias\n`;
     config.alias.forEach(a => {

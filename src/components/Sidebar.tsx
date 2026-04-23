@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, List, Settings, Plus, Trash2, Keyboard, GripVertical } from 'lucide-react';
+import { Layers, List, Settings, Plus, Trash2, Keyboard, GripVertical, Variable } from 'lucide-react';
 import { 
   DndContext, 
   closestCenter,
@@ -20,7 +20,7 @@ import { CSS } from '@dnd-kit/utilities';
 import styles from './Sidebar.module.css';
 import { useConfig } from '../store/ConfigContext';
 
-export type TabType = 'src' | 'alias' | 'config' | { type: 'layer'; index: number };
+export type TabType = 'src' | 'vars' | 'alias' | 'config' | { type: 'layer'; index: number };
 
 interface SidebarProps {
   currentTab: TabType;
@@ -155,6 +155,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onTabChange }) => 
         <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Keyboard size={18} />
           SRC
+        </span>
+      </div>
+
+      <div 
+        className={`${styles.navItem} ${currentTab === 'vars' ? styles.active : ''}`}
+        onClick={() => onTabChange('vars')}
+      >
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <Variable size={18} />
+          Vars
         </span>
       </div>
 

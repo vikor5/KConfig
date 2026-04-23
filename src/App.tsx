@@ -4,6 +4,7 @@ import { ConfigProvider, useConfig } from './store/ConfigContext';
 import { Sidebar, type TabType } from './components/Sidebar';
 import { SrcTab } from './components/SrcTab';
 import { AliasTab } from './components/AliasTab';
+import { VarsTab } from './components/VarsTab';
 import { ConfigTab } from './components/ConfigTab';
 import { LayerTab } from './components/LayerTab';
 import { exportToKConfig, exportToKbd, importFromKConfig } from './utils/export';
@@ -24,6 +25,7 @@ const MainApp: React.FC = () => {
   const renderContent = () => {
     if (currentTab === 'config') return <ConfigTab />;
     if (currentTab === 'src') return <SrcTab />;
+    if (currentTab === 'vars') return <VarsTab />;
     if (currentTab === 'alias') return <AliasTab />;
     if (typeof currentTab === 'object' && currentTab.type === 'layer') {
       return <LayerTab layerIndex={currentTab.index} />;

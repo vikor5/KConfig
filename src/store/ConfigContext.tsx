@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import type { KanataConfig, AliasMap, SrcKey, LayerConfig } from '../types';
+import type { KanataConfig, AliasMap, VarMap, SrcKey, LayerConfig } from '../types';
 
 interface ConfigContextType {
   config: KanataConfig;
@@ -7,6 +7,7 @@ interface ConfigContextType {
   updateConfigText: (text: string) => void;
   updateSrc: (newSrc: SrcKey[]) => void;
   updateAlias: (newAlias: AliasMap[]) => void;
+  updateVars: (newVars: VarMap[]) => void;
   addLayer: (name: string) => void;
   removeLayer: (index: number) => void;
   updateLayerName: (index: number, name: string) => void;
@@ -21,6 +22,7 @@ const defaultConfig: KanataConfig = {
   name: 'My Layout',
   config: 'process-unmapped-keys yes',
   src: ['esc', 'f1', 'f2', 'f3', 'grave', '1', '2', '3', 'tab', 'q', 'w', 'e', 'caps', 'a', 's', 'd', 'lsft', 'z', 'x', 'c'],
+  vars: [],
   alias: [],
   layers: [
     {
@@ -42,6 +44,8 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const updateSrc = (newSrc: SrcKey[]) => setConfig((prev) => ({ ...prev, src: newSrc }));
   
   const updateAlias = (newAlias: AliasMap[]) => setConfig((prev) => ({ ...prev, alias: newAlias }));
+  
+  const updateVars = (newVars: VarMap[]) => setConfig((prev) => ({ ...prev, vars: newVars }));
   
   const addLayer = (name: string) => {
     setConfig((prev) => ({
@@ -91,6 +95,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       name: newConfig.name || 'Imported Layout',
       config: newConfig.config || '',
       src: newConfig.src || [],
+      vars: newConfig.vars || [],
       alias: newConfig.alias || [],
       layers: newConfig.layers || []
     });
@@ -102,7 +107,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   return (
     <ConfigContext.Provider value={{
-      config, setConfig, updateConfigText, updateSrc, updateAlias, 
+      config, setConfig, updateConfigText, updateSrc, updateAlias, updateVars, 
       addLayer, removeLayer, updateLayerName, updateLayerMapping, reorderLayers, loadConfig, resetConfig, updateConfigName
     }}>
       {children}

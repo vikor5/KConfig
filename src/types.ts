@@ -3,6 +3,11 @@ export type AliasMap = {
   value: string;
 };
 
+export type VarMap = {
+  name: string;
+  value: string;
+};
+
 export type SrcKey = string;
 export type DestKey = string;
 
@@ -20,6 +25,7 @@ export type KanataConfig = {
   name?: string;
   config: string;
   src: SrcKey[];
+  vars: VarMap[];
   alias: AliasMap[];
   layers: LayerConfig[];
 };
