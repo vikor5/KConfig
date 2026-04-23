@@ -59,7 +59,7 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-md);
-  padding: 1rem;
+  padding: 0.7rem;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -69,7 +69,7 @@
 
 .aliasRow.dragging {
   opacity: 0.5;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
 
@@ -99,10 +99,13 @@
 .editInput {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
   color: var(--text-main);
   outline: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  min-width: 0;
   transition: border-color 0.2s, background 0.2s;
 }
 
